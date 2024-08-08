@@ -1,0 +1,8 @@
+<div>
+  <input type="file" (change)="onFileSelected($event)" />
+  <button (click)="onSubmit()">Upload</button>
+</div>
+<video *ngIf="videoUrl" width="600" controls>
+  <source [src]="videoUrl" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
