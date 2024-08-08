@@ -26,7 +26,6 @@ public class VideoController {
             Path filePath = Paths.get(uploadDir + fileName);
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            // URL do wideo
             String videoUrl = "http://localhost:8080/videos/" + fileName;
 
             return ResponseEntity.ok(videoUrl);
@@ -35,4 +34,3 @@ public class VideoController {
         }
     }
 }
-
