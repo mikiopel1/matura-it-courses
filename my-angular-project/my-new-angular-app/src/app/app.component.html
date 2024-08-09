@@ -1,7 +1,9 @@
-<nav>
-    <a routerLink="/register" routerLinkActive="active">Register</a>
-    <a routerLink="/users" routerLinkActive="active">Users</a>
-  </nav>
-  <router-outlet></router-outlet>
-  <app-upload-video></app-upload-video>
-  <app-display-video [videoUrl]="videoUrl"></app-display-video>
+<nav *ngIf="!isRegisterPage()">
+  <a routerLink="/register" routerLinkActive="active">Register</a>
+  <a routerLink="/users" routerLinkActive="active">Users</a>
+</nav>
+
+<router-outlet></router-outlet>
+
+<app-upload-video *ngIf="!isRegisterPage()"></app-upload-video>
+<app-display-video *ngIf="!isRegisterPage()" [videoUrl]="videoUrl"></app-display-video>

@@ -18,9 +18,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        User savedUser = userService.save(user);
-        return ResponseEntity.ok(savedUser);
+    public ResponseEntity<?> register(@RequestBody User user) {
+        try {
+            User savedUser = userService.save(user);
+            return ResponseEntity.ok(savedUser);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping

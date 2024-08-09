@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RegisterComponent } from './register/register.component';
-import { UserListComponent } from './user-list/user-list.component';
 
 const routes: Routes = [
   { path: 'register', component: RegisterComponent },
-  { path: 'users', component: UserListComponent },
-  { path: '', redirectTo: '/register', pathMatch: 'full' }
+  // Dodaj inne ścieżki według potrzeb, ale upewnij się, że inne komponenty nie są ładowane na /register
+  { path: '', redirectTo: '/register', pathMatch: 'full' }, // Ustaw domyślną ścieżkę
 ];
 
 @NgModule({

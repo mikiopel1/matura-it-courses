@@ -21,13 +21,29 @@ public class UserService {
     }
 
     public User save(User user) {
+        // Sprawdzenie, czy użytkownik lub email już istnieje
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("Username already in use");
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Email already in use");
+        }
+
         // Szyfrowanie hasła
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
+
+        // Zapisz użytkownika z emailem i rolą
         return userRepository.save(user);
     }
 
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
+    // Metoda sprawdzająca istnienie użytkownika lub emaila
+    public boolean existsByUsernameOrEmail(String username, String email) {
+        return userRepository.existsByUsername(username) || userRepository.existsByEmail(email);
+    }
 }
+
