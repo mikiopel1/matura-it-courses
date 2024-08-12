@@ -34,4 +34,5 @@
     </div>
     <button type="submit" [disabled]="!registerForm.valid">Register</button>
   </form>
+  <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
 </div>

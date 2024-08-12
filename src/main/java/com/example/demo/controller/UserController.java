@@ -5,7 +5,8 @@ import com.example.demo.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -21,15 +22,29 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
             User savedUser = userService.save(user);
-            return ResponseEntity.ok(savedUser);
+            return ResponseEntity.ok(Map.of("message", "Registration successful. Please check your email for confirmation."));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAll();
-        return ResponseEntity.ok(users);
+    @GetMapping("/confirm")
+    public ResponseEntity<?> confirmEmail(@RequestParam("token") String token) {
+        boolean isConfirmed = userService.confirmEmail(token);
+        if (isConfirmed) {
+            return ResponseEntity.ok(Map.of("message", "Email confirmed successfully. Please proceed to login."));
+        } else {
+            return ResponseEntity.badRequest().body(Map.of("message", "Invalid or expired confirmation token"));
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        try {
+            userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+            return ResponseEntity.ok(Map.of("message", "Login successful."));
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
     }
 }

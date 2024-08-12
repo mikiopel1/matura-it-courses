@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -13,6 +14,8 @@ public class User {
     private String password;
     private String email;
     private String role = "student"; // domyślna wartość dla roli
+    private boolean isEmailConfirmed = false; // Domyślnie niepotwierdzone
+    private String confirmationToken = UUID.randomUUID().toString(); // Unikalny token
 
     // Getters and setters
     public Long getId() {
@@ -53,5 +56,21 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public boolean isEmailConfirmed() {
+        return isEmailConfirmed;
+    }
+
+    public void setEmailConfirmed(boolean emailConfirmed) {
+        isEmailConfirmed = emailConfirmed;
+    }
+
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
     }
 }
