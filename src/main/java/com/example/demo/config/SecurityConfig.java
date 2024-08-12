@@ -25,6 +25,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/users/register").permitAll()
                         .requestMatchers("/videos/**").permitAll()
+                        .requestMatchers("/api/users/confirm").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }
