@@ -1,0 +1,10 @@
+<div *ngIf="course; else noData">
+  <h1>{{ course.title }}</h1>
+  <p>{{ course.description }}</p>
+  <video controls [src]="course.videoUrl"></video>
+</div>
+
+<ng-template #noData>
+  <h2>Kurs nie znaleziony</h2>
+  <p>Przepraszamy, ale nie mogliśmy znaleźć kursu o podanym ID lub wystąpił problem z jego załadowaniem.</p>
+</ng-template>

@@ -15,6 +15,7 @@ public class CourseService {
     private CourseRepository courseRepository;
 
     public Course save(Course course) {
+        // Możemy tutaj dodać dodatkową logikę dotyczącą ról, jeśli to konieczne
         return courseRepository.save(course);
     }
 
@@ -29,7 +30,10 @@ public class CourseService {
             existingCourse.setTitle(course.getTitle());
             existingCourse.setDescription(course.getDescription());
             existingCourse.setPrice(course.getPrice());
-            existingCourse.setTeacher(course.getTeacher());
+
+            // Zaktualizuj role, które mają dostęp do kursu
+            existingCourse.setAllowedRoles(course.getAllowedRoles());
+
             return courseRepository.save(existingCourse);
         }
         throw new RuntimeException("Course not found");
@@ -37,5 +41,10 @@ public class CourseService {
 
     public void delete(Long id) {
         courseRepository.deleteById(id);
+    }
+
+    public Course findById(Long id) {
+        return courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Course not found"));
     }
 }

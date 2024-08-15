@@ -3,81 +3,52 @@ package com.example.demo.service;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
-    private final JavaMailSender mailSender;
 
     @Autowired
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, JavaMailSender mailSender) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.mailSender = mailSender;
     }
 
-    // Zapisanie użytkownika po rejestracji
-    public User save(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new IllegalArgumentException("Username already in use");
+    public User findOrCreateUser(Jwt jwt) {
+        String auth0Id = jwt.getSubject();
+        String email = jwt.getClaim("email");
+        String username = jwt.getClaim("nickname");
+        //List<String> roles = jwt.getClaimAsStringList("roles");
+
+        System.out.println("Decoded JWT Claims: " + jwt.getClaims()); // Logowanie całego JWT
+        System.out.println("Auth0 ID: " + auth0Id);
+        System.out.println("Email: " + email);
+        System.out.println("Username: " + username);
+        //System.out.println("Roles: " + roles);
+
+        // Logowanie, czy użytkownik istnieje
+        Optional<User> existingUser = userRepository.findByAuth0Id(auth0Id);
+        if (existingUser.isPresent()) {
+            System.out.println("User already exists: " + existingUser.get());
+        } else {
+            System.out.println("User does not exist, creating new user.");
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email already in use");
-        }
 
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(hashedPassword);
+        return existingUser.orElseGet(() -> {
+            User newUser = new User();
+            newUser.setAuth0Id(auth0Id);
+            newUser.setEmail(email);
+            newUser.setUsername(username);
+            //newUser.setRoles(new HashSet<>(roles));
 
-        User savedUser = userRepository.save(user);
-
-        // Wyślij e-mail z tokenem potwierdzającym
-        sendConfirmationEmail(savedUser);
-
-        return savedUser;
-    }
-
-    // Znajdowanie użytkownika po nazwie użytkownika
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    // Sprawdzenie poprawności hasła
-    public boolean checkPassword(String rawPassword, String encodedPassword) {
-        return passwordEncoder.matches(rawPassword, encodedPassword);
-    }
-
-    // Wysłanie e-maila potwierdzającego rejestrację
-    private void sendConfirmationEmail(User user) {
-        String to = user.getEmail();
-        String subject = "Please confirm your email address";
-        String confirmationUrl = "http://localhost:8080/api/users/confirm?token=" + user.getConfirmationToken();
-        String message = "To confirm your email address, please click the following link: " + confirmationUrl;
-
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(to);
-        email.setFrom("liguelegends1@gmail.com");
-        email.setSubject(subject);
-        email.setText(message);
-
-        mailSender.send(email);
-    }
-
-    // Potwierdzenie e-maila na podstawie tokenu
-    public boolean confirmEmail(String token) {
-        User user = userRepository.findByConfirmationToken(token);
-        if (user != null && !user.isEmailConfirmed()) {
-            user.setEmailConfirmed(true);
-            user.setConfirmationToken(null); // Usunięcie tokenu po potwierdzeniu
-            userRepository.save(user);
-            return true;
-        }
-        return false;
+            System.out.println("Saving new user: " + newUser);
+            return userRepository.save(newUser);
+        });
     }
 }

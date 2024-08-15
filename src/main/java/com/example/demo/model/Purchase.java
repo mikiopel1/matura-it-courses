@@ -1,24 +1,25 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+
 import java.util.Date;
 
 @Entity
-@Table(name = "transactions")
-public class Transaction {
+@Table(name = "purchases")
+public class Purchase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    private Date transactionDate;
+    private Date purchaseDate;
 
     // Getters and setters
     public Long getId() {
@@ -45,11 +46,11 @@ public class Transaction {
         this.course = course;
     }
 
-    public Date getTransactionDate() {
-        return transactionDate;
+    public Date getPurchaseDate() {
+        return purchaseDate;
     }
 
-    public void setTransactionDate(Date transactionDate) {
-        this.transactionDate = transactionDate;
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 }

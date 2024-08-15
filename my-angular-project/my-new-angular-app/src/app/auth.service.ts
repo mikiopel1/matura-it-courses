@@ -1,33 +1,53 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { AuthService as Auth0Service, User } from '@auth0/auth0-angular';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api/users';
 
-  constructor(private http: HttpClient) { }
+  constructor(private auth: Auth0Service) {}
 
-  register(user: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, user);
+  // Metoda do logowania użytkownika
+  login(): void {
+    this.auth.loginWithRedirect();
   }
 
-  login(loginData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, loginData);
+  // Metoda do wylogowania użytkownika
+  logout(): void {
+    this.auth.logout({
+      logoutParams: {
+        returnTo: window.location.origin
+      }
+    });
   }
 
-  setCurrentUserId(userId: number | null): void {
-    if (userId !== null) {
-      localStorage.setItem('currentUserId', userId.toString());
-    } else {
-      localStorage.removeItem('currentUserId');
-    }
+  // Metoda do rejestracji użytkownika
+  register(): void {
+    this.auth.loginWithRedirect({
+      screen_hint: 'signup'
+    } as any);
   }
 
-  getCurrentUserId(): number | null {
-    const userId = localStorage.getItem('currentUserId');
-    return userId ? +userId : null;
+  // Sprawdzenie, czy użytkownik jest zalogowany
+  isAuthenticated$(): Observable<boolean> {
+    return this.auth.isAuthenticated$;
+  }
+
+  // Pobranie ról użytkownika (jeśli dostępne)
+  get userRoles$(): Observable<string[]> {
+    return this.auth.user$.pipe(
+      map((user: User | null | undefined) => user && user['roles'] ? user['roles'] : [])
+    );
+  }
+
+  // Pobranie ID tokenu
+  get idToken$(): Observable<string | undefined> {
+    return this.auth.user$.pipe(
+      map((user: User | null | undefined) => user ? (user as any).id_token : undefined)
+    );
+    ;
   }
 }

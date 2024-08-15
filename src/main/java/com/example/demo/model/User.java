@@ -1,7 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -10,12 +11,22 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-    private String password;
+    @Column(name = "auth0_id", unique = true, nullable = false)
+    private String auth0Id;
+
+    @Column(name = "email", nullable = false)
     private String email;
-    private String role = "student"; // domyślna wartość dla roli
-    private boolean isEmailConfirmed = false; // Domyślnie niepotwierdzone
-    private String confirmationToken = UUID.randomUUID().toString(); // Unikalny token
+
+    @Column(name = "username")
+    private String username;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<String> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Purchase> purchases = new HashSet<>();
 
     // Getters and setters
     public Long getId() {
@@ -26,20 +37,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getAuth0Id() {
+        return auth0Id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setAuth0Id(String auth0Id) {
+        this.auth0Id = auth0Id;
     }
 
     public String getEmail() {
@@ -50,27 +53,27 @@ public class User {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public String getUsername() {
+        return username;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public boolean isEmailConfirmed() {
-        return isEmailConfirmed;
+    public Set<String> getRoles() {
+        return roles;
     }
 
-    public void setEmailConfirmed(boolean emailConfirmed) {
-        isEmailConfirmed = emailConfirmed;
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 
-    public String getConfirmationToken() {
-        return confirmationToken;
+    public Set<Purchase> getPurchases() {
+        return purchases;
     }
 
-    public void setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
+    public void setPurchases(Set<Purchase> purchases) {
+        this.purchases = purchases;
     }
 }

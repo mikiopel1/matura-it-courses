@@ -1,16 +1,4 @@
 <div class="login-container">
-  <h2>Login</h2>
-  <form (submit)="onSubmit()">
-    <div class="form-group">
-      <label for="username">Username:</label>
-      <input type="text" id="username" [(ngModel)]="loginData.username" name="username" required>
-    </div>
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input type="password" id="password" [(ngModel)]="loginData.password" name="password" required>
-    </div>
-    <button type="submit" class="login-button">Login</button>
-  </form>
-  <div *ngIf="errorMessage" class="alert-error">{{ errorMessage }}</div>
-  <div *ngIf="successMessage" class="alert-success">{{ successMessage }}</div>
+  <h2>Zaloguj się</h2>
+  <button (click)="login()">Zaloguj się</button>
 </div>
