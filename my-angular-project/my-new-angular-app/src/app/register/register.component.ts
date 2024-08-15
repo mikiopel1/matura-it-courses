@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent {
   username: string = '';
-  email: string = ''; 
+  email: string = '';
   password: string = '';
   errorMessage: string | null = null;
   successMessage: string | null = null;
@@ -25,16 +25,25 @@ export class RegisterComponent {
 
     this.authService.register(user).subscribe({
       next: (response) => {
-        this.successMessage = response.message;
+        this.successMessage = "Registration successful! Redirecting to login...";
         this.errorMessage = null;
         console.log('User registered', response);
-        // Przekierowanie po rejestracji
         setTimeout(() => {
           this.router.navigate(['/login']);
-        }, 2000); // Przekierowanie po 2 sekundach
+        }, 2000);
       },
       error: (err) => {
-        this.errorMessage = err.error.message;
+        console.error('Registration error details:', err); // Logowanie pełnego błędu
+
+        const errorMessage = err?.error?.message || ''; // Bezpieczne sprawdzanie, czy err.error.message istnieje
+
+        if (errorMessage.includes("Username already in use")) {
+          this.errorMessage = "Username is already taken. Please choose another one.";
+        } else if (errorMessage.includes("Email already in use")) {
+          this.errorMessage = "Email is already in use. Please use a different email.";
+        } else {
+          this.errorMessage = "An unexpected error occurred. Please try again later.";
+        }
         this.successMessage = null;
       }
     });

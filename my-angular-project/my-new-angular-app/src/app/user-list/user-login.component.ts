@@ -12,8 +12,10 @@ export class UserLoginComponent {
   constructor(private userService: UserService) { }
 
   login(): void {
-    this.userService.loginUser(this.user).subscribe(response => {
+    this.userService.login(this.user).subscribe(response => {
       console.log('User logged in:', response);
+    }, error => {
+      console.error('Login failed:', error);
     });
   }
 }

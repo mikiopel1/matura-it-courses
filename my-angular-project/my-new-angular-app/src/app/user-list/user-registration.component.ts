@@ -12,7 +12,7 @@ export class RegisterComponent {
   constructor(private userService: UserService) {}
 
   register() {
-    this.userService.registerUser(this.user).subscribe(
+    this.userService.register(this.user).subscribe(
       response => {
         console.log('User registered successfully', response);
       },

@@ -21,8 +21,8 @@ export class LoginComponent {
         this.errorMessage = null;
         console.log('Login successful', response);
         setTimeout(() => {
-          this.router.navigate(['/']); // Przekierowanie na stronę główną po 2 sekundach
-        }, 2000); // 2000 ms = 2 sekundy
+          this.router.navigate(['/']); 
+        }, 2000); 
       },
       error: (err) => {
         this.errorMessage = err.error.message;

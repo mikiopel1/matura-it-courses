@@ -14,7 +14,20 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
 
-  login(loginData: { username: string, password: string }): Observable<any> {
+  login(loginData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, loginData);
+  }
+
+  setCurrentUserId(userId: number | null): void {
+    if (userId !== null) {
+      localStorage.setItem('currentUserId', userId.toString());
+    } else {
+      localStorage.removeItem('currentUserId');
+    }
+  }
+
+  getCurrentUserId(): number | null {
+    const userId = localStorage.getItem('currentUserId');
+    return userId ? +userId : null;
   }
 }

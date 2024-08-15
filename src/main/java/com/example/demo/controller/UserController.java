@@ -2,11 +2,11 @@ package com.example.demo.controller;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/users")
@@ -22,29 +22,42 @@ public class UserController {
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
             User savedUser = userService.save(user);
-            return ResponseEntity.ok(Map.of("message", "Registration successful. Please check your email for confirmation."));
+            return ResponseEntity.ok(savedUser);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            // Zwracanie JSON-a z polem 'message' w przypadku błędu
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Collections.singletonMap("message", e.getMessage()));
         }
     }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User user) {
+        User existingUser = userService.findByUsername(user.getUsername());
+
+        if (existingUser == null || !userService.checkPassword(user.getPassword(), existingUser.getPassword())) {
+            // Zwracanie błędu 403 z wiadomością JSON, jeśli dane logowania są nieprawidłowe
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Collections.singletonMap("message", "Invalid username or password"));
+        }
+
+        if (!existingUser.isEmailConfirmed()) {
+            // Zwracanie błędu 403 z wiadomością JSON, jeśli e-mail nie jest potwierdzony
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Collections.singletonMap("message", "Email not confirmed. Please check your inbox."));
+        }
+
+        // Jeśli logowanie się powiedzie, zwracamy użytkownika lub token, jeśli JWT jest używane
+        return ResponseEntity.ok(existingUser);
+    }
+
 
     @GetMapping("/confirm")
     public ResponseEntity<?> confirmEmail(@RequestParam("token") String token) {
         boolean isConfirmed = userService.confirmEmail(token);
         if (isConfirmed) {
-            return ResponseEntity.ok(Map.of("message", "Email confirmed successfully. Please proceed to login."));
+            return ResponseEntity.ok(Collections.singletonMap("message", "Email confirmed successfully"));
         } else {
-            return ResponseEntity.badRequest().body(Map.of("message", "Invalid or expired confirmation token"));
-        }
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        try {
-            userService.login(loginRequest.getUsername(), loginRequest.getPassword());
-            return ResponseEntity.ok(Map.of("message", "Login successful."));
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.badRequest()
+                    .body(Collections.singletonMap("message", "Invalid or expired confirmation token"));
         }
     }
 }

@@ -23,6 +23,7 @@ public class UserService {
         this.mailSender = mailSender;
     }
 
+    // Zapisanie użytkownika po rejestracji
     public User save(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new IllegalArgumentException("Username already in use");
@@ -42,6 +43,17 @@ public class UserService {
         return savedUser;
     }
 
+    // Znajdowanie użytkownika po nazwie użytkownika
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    // Sprawdzenie poprawności hasła
+    public boolean checkPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
+    }
+
+    // Wysłanie e-maila potwierdzającego rejestrację
     private void sendConfirmationEmail(User user) {
         String to = user.getEmail();
         String subject = "Please confirm your email address";
@@ -57,6 +69,7 @@ public class UserService {
         mailSender.send(email);
     }
 
+    // Potwierdzenie e-maila na podstawie tokenu
     public boolean confirmEmail(String token) {
         User user = userRepository.findByConfirmationToken(token);
         if (user != null && !user.isEmailConfirmed()) {
@@ -66,16 +79,5 @@ public class UserService {
             return true;
         }
         return false;
-    }
-
-    public User login(String username, String password) {
-        User user = userRepository.findByUsername(username);
-        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("Invalid username or password");
-        }
-        if (!user.isEmailConfirmed()) {
-            throw new IllegalStateException("Email address not confirmed");
-        }
-        return user;
     }
 }
