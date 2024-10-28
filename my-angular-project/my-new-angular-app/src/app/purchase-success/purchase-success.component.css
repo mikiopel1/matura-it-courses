@@ -1,0 +1,29 @@
+.success-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f8f9fa; /* Jasne tło */
+    border-radius: 10px; /* Zaokrąglenie rogów */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Cień kontenera */
+  }
+  
+  h1 {
+    color: #28a745; /* Kolor sukcesu */
+  }
+  
+  .button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .button:hover {
+    background-color: #0056b3; /* Zmiana koloru na hover */
+  }
+  

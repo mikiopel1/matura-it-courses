@@ -1,0 +1,58 @@
+/* Styl dla nagłówków */
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+/* Styl dla akapitów */
+p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: #666;
+}
+
+/* Styl dla list */
+ul {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+/* Styl dla linków */
+a {
+    color: #007bff; /* Kolor niebieski dla linków */
+    text-decoration: none; /* Usunięcie podkreślenia */
+}
+
+a:hover {
+    text-decoration: underline; /* Podkreślenie linku po najechaniu */
+}
+
+/* Styl dla kontenera */
+.container {
+    max-width: 800px; /* Maksymalna szerokość kontenera */
+    margin: 0 auto; /* Wyśrodkowanie kontenera */
+    padding: 20px; /* Padding wewnętrzny */
+    background-color: #f9f9f9; /* Kolor tła kontenera */
+    border-radius: 8px; /* Zaokrąglenie rogów */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Cień dla kontenera */
+}
+
+/* Styl dla stopki */
+.footer {
+    text-align: center; /* Wyśrodkowanie tekstu w stopce */
+    padding: 10px 0; /* Padding wewnętrzny */
+    background-color: #f1f1f1; /* Kolor tła stopki */
+    margin-top: 20px; /* Odstęp od górnych elementów */
+}
