@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../auth.service'; // Poprawny import AuthService
 
 @Component({
   selector: 'app-home',
@@ -6,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  title = 'Platforma Kursów Informatycznych';
+  constructor(public authService: AuthService) {}  // Wstrzyknięcie AuthService
+
+  logout(): void {
+    this.authService.logout();  // Metoda wylogowania
+  }
 }

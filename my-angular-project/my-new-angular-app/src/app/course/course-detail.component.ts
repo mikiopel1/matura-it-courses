@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CourseService } from './course.service';
 import { AuthService } from '../auth.service';
+import { StripeService } from '../stripe.service';
 import { Course } from './course.model';
 import { take, switchMap } from 'rxjs/operators';
 
@@ -13,11 +14,13 @@ export class CourseDetailComponent implements OnInit {
 
   course: Course | null = null;
   userRoles: string[] = [];
+  hasAccess: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
     private courseService: CourseService,
     private authService: AuthService,
+    private stripeService: StripeService,
     private router: Router
   ) { }
 
@@ -47,14 +50,22 @@ export class CourseDetailComponent implements OnInit {
   }
 
   private checkAccess(): void {
-    this.authService.isAuthenticated$().pipe(take(1)).subscribe((isAuthenticated: boolean) => {
+    this.authService.isAuthenticated$.pipe(take(1)).subscribe((isAuthenticated: boolean) => {
       if (isAuthenticated) {
-        if (this.course && !this.courseService.hasAccess(this.course, this.userRoles)) {
-          this.router.navigate(['/access-denied']);
+        this.hasAccess = this.courseService.hasAccess(this.course!, this.userRoles);
+        if (!this.hasAccess) {
+          console.warn('Użytkownik nie ma dostępu do tego kursu.');
         }
       } else {
         this.router.navigate(['/login']);
       }
     });
+  }
+
+  buyCourse(): void {
+    if (this.course) {
+      const priceId = 'price_1PuJKmRw3T9NFMMMidPmJ3s2'; // Zastąp odpowiednim priceId
+      this.stripeService.redirectToCheckout(priceId);
+    }
   }
 }

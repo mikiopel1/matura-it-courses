@@ -50,6 +50,36 @@
   background-color: #5a6268;
 }
 
+/* Nowe style dla przycisku Wyloguj - taki sam jak inne, tylko czerwony */
+.btn-logout {
+  background-color: #dc3545; /* Czerwony kolor */
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-logout:hover {
+  background-color: #c82333; /* Ciemniejszy czerwony na hover */
+}
+
+/* Nowe style dla przycisku Zarejestruj się - niebieski kolor */
+.btn-register {
+  background-color: #007bff; /* Niebieski kolor */
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-register:hover {
+  background-color: #0056b3; /* Ciemniejszy niebieski na hover */
+}
+
 .features {
   padding: 60px 20px;
   background-color: #f8f9fa;

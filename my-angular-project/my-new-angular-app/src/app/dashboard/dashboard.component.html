@@ -1,9 +1,22 @@
 <div class="dashboard">
   <h2>Twoje kursy</h2>
-  <ul>
-    <li>Kurs 1</li>
-    <li>Kurs 2</li>
-    <!-- Lista kursów -->
-  </ul>
-  <button routerLink="/">Wyloguj się</button>
+
+  <!-- Jeśli użytkownik ma dostęp premium, wyświetlamy kursy -->
+  <div *ngIf="hasPremiumAccess">
+    <div class="course-container" *ngIf="courses.length > 0">
+      <div class="course-tile" *ngFor="let course of courses" [routerLink]="['/course', course.id]">
+        <h3>{{ course.title }}</h3>
+        <p>{{ course.description }}</p>
+      </div>
+    </div>
+    <div *ngIf="courses.length === 0">
+      <p>Brak kursów do wyświetlenia</p>
+    </div>
+  </div>
+
+  <!-- Jeśli użytkownik nie ma dostępu premium, wyświetlamy komunikat o braku dostępu -->
+  <div *ngIf="!hasPremiumAccess" class="no-access">
+    <p>Nie masz dostępu do kursów premium. Kup dostęp, aby zobaczyć kursy.</p>
+    <button (click)="buyPremium()">Kup dostęp</button>
+  </div>
 </div>

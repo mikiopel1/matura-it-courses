@@ -1,7 +1,6 @@
 <div class="navbar">
   <a routerLink="/">Strona Główna</a>
   <a routerLink="/dashboard">Kursy</a>
-  <app-auth-button></app-auth-button>
 </div>
 
 <router-outlet></router-outlet>
@@ -9,6 +8,9 @@
 <footer class="footer">
   <div class="container">
     <p>&copy; 2024 Twoja Firma. Wszelkie prawa zastrzeżone.</p>
-    <p><a href="#">Polityka prywatności</a> | <a href="#">Warunki korzystania</a></p>
+    <p>
+      <a routerLink="/privacy-policy">Polityka prywatności</a> | 
+      <a routerLink="/terms-of-service">Warunki korzystania</a>
+    </p>
   </div>
 </footer>

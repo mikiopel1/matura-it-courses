@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../environment'; // Import środowiska
 
 @Component({
   selector: 'app-upload-video',
@@ -26,7 +27,7 @@ export class UploadVideoComponent {
     const formData = new FormData();
     formData.append('file', this.selectedFile);
 
-    this.http.post('http://localhost:8080/api/videos/upload', formData, { responseType: 'text' })
+    this.http.post(`${environment.apiUrl}/api/videos/upload`, formData, { responseType: 'text' })
       .subscribe(response => {
         console.log(response);
         this.videoUrl = response;

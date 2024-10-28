@@ -1,9 +1,13 @@
-<div class="hero">
+l<div class="hero">
   <h1>Witaj na Platformie Kursów</h1>
   <p>Profesjonalne kursy przygotowujące do matury z informatyki.</p>
+  
   <div class="buttons">
-    <button routerLink="/login" class="btn btn-primary">Zaloguj się</button>
-    <button routerLink="/register" class="btn btn-secondary">Zarejestruj się</button>
+    <!-- Sprawdzenie czy użytkownik nie jest zalogowany -->
+
+    <button *ngIf="!(authService.isAuthenticated$ | async)" routerLink="/register" class="btn btn-primary">Zarejestruj się lub zaloguj</button>
+    <!-- Sprawdzenie czy użytkownik jest zalogowany -->
+    <button *ngIf="authService.isAuthenticated$ | async" (click)="logout()" class="btn-logout">Wyloguj się</button>
   </div>
 </div>
 

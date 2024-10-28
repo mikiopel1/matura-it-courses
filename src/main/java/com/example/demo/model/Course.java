@@ -1,8 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "courses")
@@ -13,15 +11,9 @@ public class Course {
 
     private String title;
     private String description;
-    private Double price;
     private String videoUrl;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "course_roles", joinColumns = @JoinColumn(name = "course_id"))
-    @Column(name = "role")
-    private Set<String> allowedRoles = new HashSet<>(); // Role mające dostęp do kursu
-
-    // Getters and setters
+    // Gettery i settery
     public Long getId() {
         return id;
     }
@@ -46,27 +38,11 @@ public class Course {
         this.description = description;
     }
 
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
     public String getVideoUrl() {
         return videoUrl;
     }
 
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
-    }
-
-    public Set<String> getAllowedRoles() {
-        return allowedRoles;
-    }
-
-    public void setAllowedRoles(Set<String> allowedRoles) {
-        this.allowedRoles = allowedRoles;
     }
 }

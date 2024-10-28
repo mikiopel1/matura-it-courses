@@ -33,16 +33,11 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public",
-                "output": "/"
+                "input": "src/assets/.well-known",
+                "output": "/.well-known"
               },
               "src/favicon.ico",
-              "src/assets",
-              {
-                "glob": "**/*",
-                "input": "src/videos",
-                "output": "/videos"
-              }
+              "src/assets"
             ],
             "styles": [
               "src/styles.css",
@@ -76,6 +71,9 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "host": "0.0.0.0"
+          },
           "configurations": {
             "production": {
               "buildTarget": "my-new-angular-app:build:production"

@@ -15,7 +15,7 @@ export class CourseAccessService {
   getCourseWithAccessCheck(courseId: number): Observable<{ course: Course, canAccess: boolean }> {
     return forkJoin({
       course: this.courseService.getCourse(courseId),
-      userRoles: this.authService.getUserRoles()
+      userRoles: this.authService.userRoles$  // Zmieniamy getUserRoles() na userRoles$
     }).pipe(
       map(({ course, userRoles }) => ({
         course,

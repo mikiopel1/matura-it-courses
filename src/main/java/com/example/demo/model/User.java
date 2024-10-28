@@ -1,12 +1,14 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,15 +22,23 @@ public class User {
     @Column(name = "username")
     private String username;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "role")
-    private Set<String> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    @JsonManagedReference
+    private Set<Role> roles = new HashSet<>();
 
+    // Zakomentowana definicja zbioru zakupów
+    /*
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Purchase> purchases = new HashSet<>();
+    */
 
-    // Getters and setters
+    // Gettery i settery
     public Long getId() {
         return id;
     }
@@ -61,14 +71,16 @@ public class User {
         this.username = username;
     }
 
-    public Set<String> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<String> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
+    // Zakomentowane metody dla zakupów
+    /*
     public Set<Purchase> getPurchases() {
         return purchases;
     }
@@ -76,4 +88,5 @@ public class User {
     public void setPurchases(Set<Purchase> purchases) {
         this.purchases = purchases;
     }
+    */
 }

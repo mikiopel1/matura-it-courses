@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,9 @@ import java.nio.file.StandardCopyOption;
 @RequestMapping("/api/videos")
 public class VideoController {
 
+    @Value("${backend.url}")
+    private String backendUrl;
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadVideo(@RequestParam("file") MultipartFile file) {
         try {
@@ -26,7 +30,7 @@ public class VideoController {
             Path filePath = Paths.get(uploadDir + fileName);
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            String videoUrl = "http://localhost:8080/videos/" + fileName;
+            String videoUrl = backendUrl + "/videos/" + fileName;
 
             return ResponseEntity.ok(videoUrl);
         } catch (IOException e) {

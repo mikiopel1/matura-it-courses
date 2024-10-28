@@ -4,7 +4,7 @@ export class Course {
   description: string;
   price: number;
   videoUrl: string;
-  allowedRoles: string[];  // Definicja właściwości allowedRoles
+  allowedRoles: string[];
 
   constructor(id: number, title: string, description: string, price: number, videoUrl: string, allowedRoles: string[]) {
     this.id = id;

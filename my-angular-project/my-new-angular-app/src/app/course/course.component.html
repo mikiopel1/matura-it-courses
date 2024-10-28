@@ -1,7 +1,7 @@
 <div *ngIf="course">
   <h2>{{ course.title }}</h2>
-<p>{{ course.description }}</p>
-<a [routerLink]="['/courses', course.id]">View Course</a>
+  <p>{{ course.description }}</p>
+  <a [routerLink]="['/courses', course.id]">View Course</a>
 </div>
 <div *ngIf="!course">
   <h2>Course not found or you do not have access.</h2>

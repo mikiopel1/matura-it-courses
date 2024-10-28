@@ -29,10 +29,6 @@ public class CourseService {
             Course existingCourse = optionalCourse.get();
             existingCourse.setTitle(course.getTitle());
             existingCourse.setDescription(course.getDescription());
-            existingCourse.setPrice(course.getPrice());
-
-            // Zaktualizuj role, które mają dostęp do kursu
-            existingCourse.setAllowedRoles(course.getAllowedRoles());
 
             return courseRepository.save(existingCourse);
         }

@@ -3,6 +3,7 @@ import { CourseService } from './course.service';
 import { AuthService } from '../auth.service';
 import { Course } from './course.model';
 import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';  // Dodaj import of, aby zwrócić pustą tablicę w razie potrzeby
 
 @Component({
   selector: 'app-course-list',
@@ -11,7 +12,7 @@ import { switchMap } from 'rxjs/operators';
 })
 export class CourseListComponent implements OnInit {
   courses: Course[] = [];  // Lista kursów
-  userRoles: string[] = [];
+  userRoles: string[] = [];  // Lista ról użytkownika
 
   constructor(
     private courseService: CourseService,
@@ -19,20 +20,21 @@ export class CourseListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.authService.isAuthenticated$().pipe(
+    // Poprawka: Usuń () po isAuthenticated$
+    this.authService.isAuthenticated$.pipe(
       switchMap(isAuthenticated => {
         if (isAuthenticated) {
           return this.courseService.getCourses();  // Pobranie kursów tylko jeśli użytkownik jest zalogowany
         } else {
           console.log('Użytkownik nie jest zalogowany');
-          return [];  // Pusty wynik, jeśli użytkownik nie jest zalogowany
+          return of([]);  // Zwrócenie pustej tablicy, jeśli użytkownik nie jest zalogowany
         }
       })
     ).subscribe({
       next: (courses: Course[]) => {
         this.courses = courses;
       },
-      error: (err) => console.error('Błąd podczas pobierania kursów:', err)
+      error: (err: any) => console.error('Błąd podczas pobierania kursów:', err)
     });
   }
 }
